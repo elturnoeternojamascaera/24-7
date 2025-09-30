@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/128/43/43160.png">
+    <title>TURNO ETERNO</title>
+    <!-- Filtro SVG para distorsión de texto -->
+    <svg width="0" height="0" style="position:absolute">
+        <filter id="wavy-text">
+            <feTurbulence baseFrequency="0.005 0.005" numOctaves="2" seed="2" type="turbulence" result="turb" />
+            <feDisplacementMap in2="turb" in="SourceGraphic" scale="10" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+    </svg>
+    <!-- Google Fonts medievales -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* Fondo galaxial parallax */
+        body {
+            margin: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-family: 'Cinzel', 'UnifrakturCook', serif, Arial, sans-serif;
+            color: #fff;
+            /* background: #0a0026; */
+            background: linear-gradient(180deg, #0a0026 0%, #0a0026 100%);
+            transition: all 0.8s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+            overflow: hidden;
+            transition: opacity 0.8s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .stars,
+        .stars2,
+        .stars3,
+        .nebulosa {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background-repeat: repeat;
+            background-size: cover;
+            pointer-events: none;
+            transition: opacity 0.8s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .stars {
+            background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+            opacity: 0.7;
+            animation: moveStars 120s linear infinite;
+            z-index: -3;
+        }
+
+        .stars2 {
+            background-image: url('https://www.transparenttextures.com/patterns/tiny-grid.png');
+            opacity: 0.3;
+            animation: moveStars2 200s linear infinite;
+            z-index: -2;
+        }
+
+        .stars3 {
+            background-image: url('https://www.transparenttextures.com/patterns/diamond-upholstery.png');
+            opacity: 0.2;
+            animation: moveStars3 300s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveStars {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 1000px 1000px;
+            }
+        }
+
+        @keyframes moveStars2 {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: -1000px 500px;
+            }
+        }
+
+        @keyframes moveStars3 {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 500px -1000px;
+            }
+        }
+
+        /* Nebulosa */
+        .nebulosa {
+            position: absolute;
+            top: 10vh;
+            left: 50vw;
+            width: 60vw;
+            height: 60vh;
+            background: radial-gradient(ellipse at center, rgba(120, 0, 255, 0.3) 0%, rgba(0, 0, 0, 0) 80%);
+            filter: blur(40px);
+            z-index: -1;
+            animation: nebulaMove 40s ease-in-out infinite alternate;
+        }
+
+        @keyframes nebulaMove {
+            0% {
+                transform: translate(-30vw, 0);
+            }
+
+            100% {
+                transform: translate(10vw, 10vh);
+            }
+        }
+
+        /* Título épico */
+        .titulo {
+            font-size: 3.5em;
+            text-align: center;
+            letter-spacing: 0.1em;
+            font-family: 'UnifrakturCook', 'Cinzel', serif, Arial, sans-serif;
+            color: #fff;
+            text-shadow: 0 0 30px #7f00ff, 0 0 10px #00c3ff, 2px 2px 8px #000;
+            filter: url(#wavy-text);
+            background: linear-gradient(90deg, #7f00ff 0%, #e100ff 50%, #00c3ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Contenido épico */
+        .contenido {
+            filter: url(#wavy-text);
+            max-width: 700px;
+            margin: 3em 1em 2em 1em;
+            padding: 2em 2em 2em 2em;
+            background: rgba(20, 0, 40, 0.7);
+            border-radius: 20px;
+            box-shadow: 0 0 40px 10px #7f00ff55;
+            font-size: 1.25em;
+            line-height: 1.7;
+            backdrop-filter: blur(2px);
+            transition: box-shadow 0.8s cubic-bezier(.4, 0, .2, 1);
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contenido h2 {
+            text-align: center;
+            font-size: 3em;
+            font-family: 'Cinzel', 'UnifrakturCook', serif, Arial, sans-serif;
+        }
+
+        .contenido strong {
+            color: #00c3ff;
+            text-shadow: 0 0 8px #fff, 0 0 4px #7f00ff;
+        }
+
+        /* Primera letra grande en nombres de guardianes */
+        .contenido h3::first-letter {
+            font-size: 2em;
+            color: #00c3ff;
+            text-shadow: 0 0 10px #7f00ff, 0 0 4px #fff;
+            font-weight: bold;
+        }
+
+        .caidos-section {
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 18px;
+            box-shadow: 0 0 40px 10px #000a, 0 0 0 4px #222 inset;
+            margin-top: 3em;
+            padding: 2em 1.5em 1.5em 1.5em;
+            position: relative;
+            transition: background 1s;
+        }
+
+        .caidos-section h2 {
+            color: #bdbdbd;
+            text-shadow: 0 0 18px #000, 0 0 4px #fff2;
+            letter-spacing: 0.15em;
+            font-family: 'Cinzel', serif;
+        }
+
+        .caidos-section h3 {
+            color: #6e6e6e;
+            text-shadow: 0 0 10px #000, 0 0 2px #fff2;
+        }
+
+        .caidos-section p {
+            color: #bdbdbd;
+            font-style: italic;
+            text-shadow: 0 0 8px #000;
+        }
+
+        .caidos-section::before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 50%;
+            top: -30px;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: url('https://cdn-icons-png.flaticon.com/128/2917/2917242.png') no-repeat center/contain;
+            opacity: 0.25;
+            filter: grayscale(1);
+        }
+
+        /* Fondo fúnebre al llegar a Los Caídos */
+        body.funebre {
+            background: linear-gradient(180deg, #181818 0%, #232323 100%) !important;
+            transition: all 0.8s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .parallax-bg.funebre .stars,
+        .parallax-bg.funebre .stars2,
+        .parallax-bg.funebre .stars3,
+        .parallax-bg.funebre .nebulosa {
+            opacity: 0.08 !important;
+        }
+
+        body.funebre .contenido {
+            box-shadow: 0 0 40px 10px #000a;
+            background: rgba(24, 24, 24, 0.7);
+        }
+
+        body.funebre .contenido h3::first-letter {
+            color: #191919;
+            text-shadow: 0 0 10px #ffffff, 0 0 4px #fff;
+        }
+
+        @media (max-width: 600px) {
+            .titulo {
+                font-size: 1.5em;
+                margin-top: 1.2em;
+                padding: 0 0.3em;
+            }
+
+            .contenido {
+                max-width: 98vw;
+                padding: 1em 1em 1em 1em;
+                font-size: 1em;
+                border-radius: 12px;
+            }
+
+            .contenido h2 {
+                font-size: 2em;
+            }
+
+            .caidos-section {
+                padding: 1.2em 0.5em 1em 0.5em;
+                margin-top: 2em;
+                border-radius: 10px;
+            }
+
+            .caidos-section h2 {
+                font-size: 1.5em;
+            }
+
+            .caidos-section::before {
+                width: 38px;
+                height: 38px;
+                top: -18px;
+            }
+
+            .parallax-bg,
+            .stars,
+            .stars2,
+            .stars3,
+            .nebulosa {
+                width: 100vw !important;
+                height: 100vh !important;
+                min-width: 100vw !important;
+                min-height: 100vh !important;
+            }
+
+            section>h3 {
+                font-size: 1.1em;
+            }
+
+            .contenido p,
+            .caidos-section p {
+                font-size: 0.98em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Fondo galaxial parallax -->
+    <div class="parallax-bg">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+        <div class="stars3"></div>
+        <div class="nebulosa"></div>
+    </div>
+
+    <!-- Título -->
+    <h1 class="titulo">La Leyenda de Los Eternos</h1>
+
+    <div class="contenido">
+        <section>
+            <h2>El Reino</h2>
+            <p>
+                En los oscuros pasillos del Reino, donde el tiempo se dobla y los correos nunca descansan, existe
+                un mítico equipo, <strong>Los Eternos</strong>. Allí, los relojes no mandan, los tickets se regeneran y
+                solo los elegidos sobreviven sin perder la cordura (del todo).
+            </p>
+            <p>
+                Entre estos guardianes, se forjaron leyendas. Cada uno, con su propio don, mantiene el equilibrio en el
+                universo.
+            </p>
+        </section>
+
+        <section>
+            <h2>LOS GUARDIANES</h2>
+
+            <section>
+                <h3>Yago, el Fantasías</h3>
+                <p>
+                    Espíritu libre atrapado en un cuerpo de empleado. Maestro del multitasking legendario y portador de
+                    ideas imposibles. Algunos dicen que ya resolvió los tickets del mes siguiente... otros aseguran que
+                    solo estaba viendo videos motivacionales. Su creatividad es tan infinita como su capacidad para
+                    despistar a los supervisores.
+                </p>
+            </section>
+
+            <section>
+                <h3>Ellande, el Anciano</h3>
+                <p>
+                    El sabio del escuadrón. Ha vivido tantas actualizaciones que recuerda cuando los tickets eran en
+                    papel y los correos se enviaban por paloma mensajera. Conoce atajos olvidados por el tiempo y su
+                    presencia impone respeto. Habla poco, pero cuando lo hace, el pueblo escucha y los peones tiemblan.
+                </p>
+            </section>
+
+            <section>
+                <h3>Ivan, el Chamán</h3>
+                <p>
+                    El místico del grupo. Conoce los secretos más oscuros del reino y puede comunicarse con los tickets
+                    perdidos en el limbo digital. Su sabiduría es legendaria, y se dice que puede predecir los picos de
+                    carga antes de que ocurran. Siempre tiene un ritual para cada incidencia y un conjuro para cada
+                    usuario.
+                </p>
+            </section>
+
+            <section>
+                <h3>Dani, el Increíble</h3>
+                <p>
+                    Una fuerza imparable con el teclado. Soluciona errores antes de que se reporten, responde correos
+                    con la mente y resuelve conflictos de usuarios con un solo mensaje. Si hay una emergencia, Dani ya
+                    la resolvió. Si no la ves trabajando, es porque va más rápido que la vista. Su leyenda dice que
+                    nunca ha perdido una batalla contra el reloj.
+                </p>
+            </section>
+
+            <section>
+                <h3>Cristian, el Otorgador de Vida</h3>
+                <p>
+                    El generoso del grupo. Siempre dispuesto a ayudar, comparte su conocimiento y recursos con todos. Se
+                    dice que puede revivir a cualquier caído con solo un par de clics. Su lema: "Un ticket resuelto es
+                    un usuario feliz". Donde hay caos, él siembra orden y esperanza.
+                </p>
+            </section>
+
+            <section>
+                <h3>Diego, el Inocente</h3>
+                <p>
+                    El más puro del grupo. Siempre ve lo mejor en los demás y nunca duda de las intenciones de sus
+                    compañeros. Su optimismo es contagioso, y se dice que puede resolver conflictos simplemente
+                    sonriendo. Nadie que lo haya visto triste ha vivido para contarlo.
+                </p>
+            </section>
+
+            <section>
+                <h3>Unai, el Tanque</h3>
+                <p>
+                    El protector del grupo. Siempre está dispuesto a recibir el impacto de los problemas y a defender a
+                    sus compañeros. Su resistencia es legendaria, y se dice que puede soportar cualquier carga sin
+                    inmutarse. Cuando todo parece perdido, Unai aguanta firme y nunca deja caer a los suyos.
+                </p>
+            </section>
+
+            <section>
+                <h3>Gorka, el Gigante</h3>
+                <p>
+                    Coloso entre los Eternos, su presencia impone respeto y confianza. Gorka es la fuerza tranquila:
+                    resuelve los desafíos más grandes con una sonrisa y siempre tiene una palabra de ánimo para el
+                    equipo. Cuando todo parece imposible, él demuestra que ningún obstáculo es demasiado grande.
+                </p>
+            </section>
+        </section>
+
+        <section>
+            <h2>El Legado</h2>
+            <p>
+                Así, día tras noche y ticket tras ticket, estos héroes mantienen viva la leyenda.
+                Porque cuando todos descansan... Los Eternos vigilan.
+            </p>
+        </section>
+
+        <!-- Nueva sección para los caídos -->
+        <section class="caidos-section" id="caidos">
+            <h2>Los Caídos</h2>
+            <section>
+                <h3>Kristian, el Nocturno</h3>
+                <p>
+                    Dueño de la noche y amo de los silencios del reino. Mientras todos duermen, él vigila con su café
+                    eterno y mirada de guerra. K enfrentaba los bugs como un monje guerrero, resolviendo incidencias
+                    imposibles en la penumbra. Nadie dominaba la oscuridad como él, y su legado aún resuena en cada
+                    guardia nocturna.
+                </p>
+            </section>
+            <section>
+                <h3>Bruno, el Hermoso</h3>
+                <p>
+                    Su sola presencia iluminaba el Reino, capaz de calmar hasta los tickets más rebeldes. Maestro en el
+                    arte de la elegancia bajo presión, Bruno resolvía problemas sin despeinarse y dejaba tras de sí un
+                    aura de buen rollo y admiración. Dicen que aún se siente su encanto en cada rincón del Reino.
+                </p>
+            </section>
+        </section>
+    </div>
+</body>
+<script>
+    // Transición suave al entrar/salir de la sección de Los Caídos
+    document.addEventListener('DOMContentLoaded', function () {
+        const caidos = document.getElementById('caidos');
+        const parallax = document.querySelector('.parallax-bg');
+        let funebreActive = false;
+
+        function setFunebre(active) {
+            if (active === funebreActive) return;
+            funebreActive = active;
+            if (active) {
+                document.body.classList.add('funebre');
+                if (parallax) parallax.classList.add('funebre');
+            } else {
+                document.body.classList.remove('funebre');
+                if (parallax) parallax.classList.remove('funebre');
+            }
+        }
+
+        function checkCaidosInView() {
+            const rect = caidos.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            // Calcula la parte visible de la sección
+            const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
+            const visibleRatio = visibleHeight / rect.height;
+            // Solo activa el modo fúnebre si al menos el 30% de la sección es visible
+            const inView = visibleRatio > 0.3;
+            setFunebre(inView);
+        }
+        window.addEventListener('scroll', checkCaidosInView);
+        checkCaidosInView();
+
+        // --- PARALLAX SCROLL FONDO ---
+        const stars = document.querySelector('.stars');
+        const stars2 = document.querySelector('.stars2');
+        const stars3 = document.querySelector('.stars3');
+        const nebulosa = document.querySelector('.nebulosa');
+
+        window.addEventListener('scroll', function () {
+            const scrollY = window.scrollY;
+            if (stars) stars.style.backgroundPosition = `0px ${scrollY * 0.3}px`;
+            if (stars2) stars2.style.backgroundPosition = `0px ${scrollY * 0.15}px`;
+            if (stars3) stars3.style.backgroundPosition = `0px ${scrollY * 0.07}px`;
+            if (nebulosa) nebulosa.style.top = `${10 + scrollY * 0.05}vh`;
+        });
+    });
+</script>
+
+</html>
