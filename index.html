@@ -14,7 +14,8 @@
         </filter>
     </svg>
     <!-- Google Fonts medievales -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=UnifrakturCook:wght@700&display=swap"
+        rel="stylesheet">
     <style>
         /* Fondo galaxial parallax */
         body {
@@ -240,6 +241,218 @@
             text-shadow: 0 0 10px #ffffff, 0 0 4px #fff;
         }
 
+        /* Botón para abrir listado de días */
+        .dias-toggle {
+            text-align: center;
+            margin-top: 0.6rem;
+        }
+
+        .dias-toggle button {
+            background: linear-gradient(90deg, #7f00ff, #00c3ff);
+            border: none;
+            color: white;
+            padding: 0.45rem 0.9rem;
+            border-radius: 999px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(127, 0, 255, 0.18);
+            transition: transform .15s ease, box-shadow .15s ease;
+        }
+
+        .dias-toggle button:active {
+            transform: translateY(1px);
+        }
+
+        /* Panel lateral / modal para mostrar días */
+        .dias-panel {
+            position: fixed;
+            right: 1.5rem;
+            top: 4rem;
+            bottom: 2rem;
+            width: min(720px, 95vw);
+            background: rgba(10, 6, 20, 0.95);
+            backdrop-filter: blur(6px);
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            padding-left: 1rem;
+            padding-right: 1rem;
+            padding-bottom: 1rem;
+            overflow: auto;
+            z-index: 9999;
+            display: none;
+        }
+
+        .dias-panel.open {
+            display: block;
+        }
+
+        .dias-panel .panel-header {
+            /* hacer la cabecera fija dentro del panel para que el botón Cerrar siempre sea accesible */
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .8rem;
+            padding: .75rem 0.8rem;
+            background: linear-gradient(180deg, rgba(10,6,20,0.95), rgba(10,6,20,0.85));
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .dias-panel .panel-controls {
+            display: flex;
+            gap: .5rem;
+            align-items: center;
+        }
+
+        .dias-panel input[type="search"] {
+            min-width: 220px;
+            padding: .45rem .6rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.02);
+            color: #fff;
+            outline: none;
+        }
+
+        .dias-grid {
+            display: grid;
+            /* una sola columna para que las frases no queden en columnas */
+            grid-template-columns: 1fr;
+            gap: .8rem;
+        }
+
+        .dia-card {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+            border-radius: 10px;
+            padding: .8rem;
+            color: #e6e6e6;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+            font-size: .95rem;
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+            max-height: 240px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dia-card .day-num {
+            font-weight: 800;
+            color: #00c3ff;
+            letter-spacing: .06em;
+            font-size: .95rem;
+        }
+
+        .dia-card .dia-snippet {
+            flex: 1 1 auto;
+            overflow: auto;
+            /* evitar columnas y respetar el flujo normal de texto */
+            white-space: normal;
+            line-height: 1.4;
+            color: #ddd;
+            /* asegurar que no se use multicolumn layout */
+            column-count: 1;
+
+            /* padding para separar texto del thumb */
+            padding-right: 8px;
+        }
+
+        /* WebKit (Chrome, Edge, Safari) */
+        .dia-card .dia-snippet::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .dia-card .dia-snippet::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .dia-card .dia-snippet::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #7f00ff, #00c3ff);
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            min-height: 24px;
+        }
+
+        .dia-card .dia-snippet::-webkit-scrollbar-thumb:hover {
+            filter: brightness(1.08);
+        }
+
+        /* WebKit (Chrome, Edge, Safari) */
+        .dias-panel::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .dias-panel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .dias-panel::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #7f00ff, #00c3ff);
+            border-radius: 10px;
+            border: 2px solid rgba(0, 0, 0, 0.25);
+            min-height: 24px;
+        }
+
+        .dias-panel::-webkit-scrollbar-thumb:hover {
+            filter: brightness(1.08);
+        }
+
+        .dia-card .more {
+            margin-top: .4rem;
+            align-self: flex-end;
+            background: transparent;
+            border: none;
+            color: #7f00ff;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        /* estado expandido */
+        .dia-card.expanded {
+            max-height: none;
+        }
+
+        .dia-card.expanded .dia-snippet {
+            max-height: none;
+        }
+
+        /* Close button */
+        .dias-close {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #fff;
+            padding: .35rem .6rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 800px) {
+            .dias-panel {
+                left: 1rem;
+                right: 1rem;
+                top: 3.5rem;
+                bottom: 1rem;
+                width: auto;
+            }
+
+            .dias-grid {
+                display: grid;
+                /* una sola columna para que las frases no queden en columnas */
+                grid-template-columns: 1fr;
+                gap: .8rem;
+            }
+        }
+
         @media (max-width: 600px) {
             .titulo {
                 font-size: 1.5em;
@@ -308,6 +521,11 @@
 
     <!-- Título -->
     <h1 class="titulo">La Leyenda de Los Eternos</h1>
+
+    <!-- Nuevo: botón para abrir listado de días -->
+    <div class="dias-toggle" aria-hidden="false">
+        <button id="open-dias" type="button" aria-expanded="false">Frases Celebres de los eternos</button>
+    </div>
 
     <div class="contenido">
         <section>
@@ -432,7 +650,24 @@
             </section>
         </section>
     </div>
+
+    <!-- Panel de días (se rellena desde JS) -->
+    <aside id="dias-panel" class="dias-panel" role="dialog" aria-modal="false" aria-labelledby="dias-title">
+        <div class="panel-header">
+            <h3 id="dias-title" style="margin:0;color:#fff">Días — Cronología</h3>
+            <div class="panel-controls">
+                <input id="dias-search" type="search" placeholder="Buscar texto o número de día..."
+                    aria-label="Buscar días">
+                <button id="close-dias" class="dias-close" type="button">Cerrar</button>
+            </div>
+        </div>
+        <div id="dias-grid" class="dias-grid" aria-live="polite">
+            <!-- tarjetas inyectadas -->
+        </div>
+        <div id="dias-empty" style="display:none;color:#bbb;margin-top:.6rem">No se encontraron entradas.</div>
+    </aside>
 </body>
+
 <script>
     // Transición suave al entrar/salir de la sección de Los Caídos
     document.addEventListener('DOMContentLoaded', function () {
@@ -479,6 +714,179 @@
             if (nebulosa) nebulosa.style.top = `${10 + scrollY * 0.05}vh`;
         });
     });
+
+    /* ======= NUEVO: carga y render de dias.json (remote con fallback) ======= */
+    (function () {
+        const remoteCandidates = [
+            "https://raw.githubusercontent.com/elturnoeternojamascaera/24-7/main/dias.json",
+            "https://raw.githubusercontent.com/elturnoeternojamascaera/24_7/main/dias.json",
+            "https://raw.githubusercontent.com/elturnoeterno/247/main/dias.json"
+        ];
+        const localFallback = "./dias.json";
+
+        async function fetchWithTimeout(url, timeout = 6000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(id);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res;
+            } catch (e) {
+                clearTimeout(id);
+                throw e;
+            }
+        }
+
+        async function loadDias() {
+            // Intenta los candidatos remotos en orden, si fallan usa local
+            for (const u of remoteCandidates) {
+                try {
+                    const r = await fetchWithTimeout(u, 7000);
+                    const data = await r.json();
+                    return data;
+                } catch (err) {
+                    // continúa con siguiente candidato
+                }
+            }
+            // fallback local
+            try {
+                const r = await fetchWithTimeout(localFallback, 4000);
+                return await r.json();
+            } catch (err) {
+                console.error("No se pudo cargar dias.json (remote ni local).", err);
+                return [];
+            }
+        }
+
+        function createCard(entry) {
+            const card = document.createElement('article');
+            card.className = 'dia-card';
+            card.dataset.day = entry.day;
+            const head = document.createElement('div');
+            head.className = 'day-num';
+            head.textContent = `Día ${entry.day}`;
+
+            const snippet = document.createElement('div');
+            snippet.className = 'dia-snippet';
+
+            const raw = entry.content || '';
+            if (raw.includes('[INTRO]')) {
+                // Divide por cada marcador y procesa en orden:
+                // - el primer segmento es texto previo (antes del primer [INTRO])
+                // - cada segmento posterior genera una intro-line con la primera línea,
+                //   y el resto del segmento se añade como texto normal.
+                const parts = raw.split('[INTRO]');
+                const before = parts[0].trim();
+                if (before) {
+                    const beforeEl = document.createElement('div');
+                    beforeEl.textContent = before;
+                    snippet.appendChild(beforeEl);
+                    // dos saltos de línea explícitos
+                }
+
+                for (let i = 1; i < parts.length; i++) {
+                    const part = parts[i];
+                    const [introLine, ...restLines] = part.split(/\r?\n/);
+                    if (introLine && introLine.trim()) {
+                        const introEl = document.createElement('div');
+                        introEl.className = 'intro-line';
+                        introEl.textContent = introLine.trim();
+                        snippet.appendChild(introEl);
+                        // dos saltos de línea tras la intro
+                    }
+                    const restText = restLines.join('\n').trim();
+                    if (restText) {
+                        const restEl = document.createElement('div');
+                        restEl.textContent = restText;
+                        snippet.appendChild(restEl);
+                        // si hay más partes, separar con dos saltos
+                    }
+                }
+            } else {
+                snippet.textContent = raw;
+            }
+
+            const moreBtn = document.createElement('button');
+            moreBtn.className = 'more';
+            moreBtn.type = 'button';
+            moreBtn.textContent = 'Leer más';
+            moreBtn.addEventListener('click', () => {
+                card.classList.toggle('expanded');
+                moreBtn.textContent = card.classList.contains('expanded') ? 'Leer menos' : 'Leer más';
+                if (card.classList.contains('expanded')) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+            card.appendChild(head);
+            card.appendChild(snippet);
+            card.appendChild(moreBtn);
+            return card;
+        }
+
+        function renderGrid(list) {
+            const grid = document.getElementById('dias-grid');
+            const empty = document.getElementById('dias-empty');
+            grid.innerHTML = '';
+            if (!Array.isArray(list) || list.length === 0) {
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+            list.forEach(item => {
+                grid.appendChild(createCard(item));
+            });
+        }
+
+        function filterAndRender(allEntries, query) {
+            if (!query) {
+                renderGrid(allEntries);
+                return;
+            }
+            const q = query.trim().toLowerCase();
+            const filtered = allEntries.filter(e => {
+                return String(e.day).includes(q) || (e.content || '').toLowerCase().includes(q);
+            });
+            renderGrid(filtered);
+        }
+
+        // UI wiring
+        document.addEventListener('DOMContentLoaded', async () => {
+            const openBtn = document.getElementById('open-dias');
+            const closeBtn = document.getElementById('close-dias');
+            const panel = document.getElementById('dias-panel');
+            const search = document.getElementById('dias-search');
+
+            let allDias = [];
+
+            openBtn.addEventListener('click', () => {
+                const isOpen = panel.classList.toggle('open');
+                openBtn.setAttribute('aria-expanded', String(isOpen));
+                panel.setAttribute('aria-modal', String(isOpen));
+                if (isOpen) {
+                    // si aún no cargado, cargar
+                    if (!allDias.length) {
+                        loadDias().then(data => {
+                            allDias = Array.isArray(data) ? data : [];
+                            // aseguramos orden por día
+                            allDias.sort((a, b) => (a.day || 0) - (b.day || 0));
+                            renderGrid(allDias);
+                        }).catch(err => {
+                            console.error(err);
+                            document.getElementById('dias-empty').textContent = 'Error cargando entradas.';
+                            document.getElementById('dias-empty').style.display = 'block';
+                        });
+                    }
+                }
+            });
+            closeBtn.addEventListener('click', () => {
+                panel.classList.remove('open');
+                openBtn.setAttribute('aria-expanded', 'false');
+                panel.setAttribute('aria-modal', 'false');
+            });
+            search.addEventListener('input', (e) => {
+                filterAndRender(allDias, e.target.value);
+            });
+        });
+    })();
 </script>
 
 </html>
